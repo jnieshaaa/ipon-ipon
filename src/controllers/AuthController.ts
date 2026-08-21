@@ -1,5 +1,5 @@
 import { IUser } from "../models/User";
-import { loginQuery, logoutQuery, getCurrentUserQuery, signUpQuery, SignUpData, SignUpResult } from "../queries/auth";
+import { loginQuery, logoutQuery, getCurrentUserQuery, signUpQuery, SignUpData, SignUpResult, sendPasswordResetEmailQuery, updatePasswordQuery } from "../queries/auth";
 
 export class AuthController {
   /**
@@ -28,5 +28,19 @@ export class AuthController {
    */
   async getCurrentUser(): Promise<IUser | null> {
     return await getCurrentUserQuery();
+  }
+
+  /**
+   * Send password reset email
+   */
+  async sendPasswordResetEmail(email: string): Promise<boolean> {
+    return await sendPasswordResetEmailQuery(email);
+  }
+
+  /**
+   * Update current user's password
+   */
+  async updatePassword(password: string): Promise<boolean> {
+    return await updatePasswordQuery(password);
   }
 }

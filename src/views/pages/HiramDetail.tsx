@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Calendar, TrendingUp, DollarSign, X, Plus, Edit, Trash2 } from 'lucide-react';
 import { calculateLoanInterest, Borrower, Loan } from '../../models/mockAccounts';
 import { useAuth } from '../../hooks/useAuth';
-import { getBorrowersQuery, addLoanToBorrowerQuery, deleteLoanQuery, updateLoanQuery } from '../../queries/hiram';
+import { getBorrowersQuery, addLoanToBorrowerQuery, deleteLoanQuery, updateLoanQuery } from '../../queries/hiram'; // Trigger re-check
 import { getSaversQuery } from '../../queries/savings';
 
 export default function HiramDetail() {

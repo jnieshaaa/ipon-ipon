@@ -24,6 +24,7 @@ const HiramDetail = lazy(() => import("../views/pages/HiramDetail"));
 const HiramPayment = lazy(() => import("../views/pages/HiramPayment"));
 const PendingApprovals = lazy(() => import("../views/pages/PendingApprovals"));
 const QuickBalance = lazy(() => import("../views/pages/QuickBalance"));
+const ResetPassword = lazy(() => import("../views/pages/ResetPassword"));
 
 // Elegant loader using CSS custom variables matching user theme
 const PageLoading = () => (
@@ -66,6 +67,50 @@ function BackButtonHandler() {
   return null;
 }
 
+// Deep linking handler to process external URL scheme launches
+function DeepLinkHandler() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleUrlOpen = (event: { url: string }) => {
+      console.log('App opened with URL:', event.url);
+      
+      try {
+        const rawUrl = event.url;
+        let path = '';
+        let hash = '';
+
+        if (rawUrl.startsWith('iponipon://')) {
+          const parts = rawUrl.replace('iponipon://', '').split('#');
+          path = parts[0];
+          hash = parts[1] ? '#' + parts[1] : '';
+        } else {
+          const parsedUrl = new URL(rawUrl);
+          path = parsedUrl.pathname;
+          hash = parsedUrl.hash;
+        }
+
+        if (path === 'reset-password' || path === '/reset-password') {
+          if (hash) {
+            window.location.hash = hash;
+          }
+          navigate('/reset-password', { replace: true });
+        }
+      } catch (err) {
+        console.error('Error handling deep link URL:', err);
+      }
+    };
+
+    const listener = App.addListener('appUrlOpen', handleUrlOpen);
+
+    return () => {
+      listener.then(l => l.remove());
+    };
+  }, [navigate]);
+
+  return null;
+}
+
 export default function AppRoutes() {
   const { isAuthenticated } = useAuth();
   const selectedGroupId = localStorage.getItem('ipon_selected_group_id');
@@ -73,6 +118,7 @@ export default function AppRoutes() {
   return (
     <BrowserRouter>
       <BackButtonHandler />
+      <DeepLinkHandler />
       <Suspense fallback={<PageLoading />}>
         <Routes>
           {/* Login route */}
@@ -87,6 +133,7 @@ export default function AppRoutes() {
             } 
           />
           <Route path="/quick-balance" element={<QuickBalance />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           
           {/* Group Selection route */}
           <Route path="/group-selection" element={<GroupSelection />} />

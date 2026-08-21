@@ -304,3 +304,76 @@ export function onAuthStateChange(callback: (user: IUser | null) => void) {
   });
 }
 
+/**
+ * Send password reset email
+ */
+export async function sendPasswordResetEmailQuery(email: string): Promise<boolean> {
+  if (isMockMode()) {
+    let registeredUsers: SignUpData[] = [];
+    try {
+      const data = localStorage.getItem('ipon_mock_registered_users');
+      if (data) registeredUsers = JSON.parse(data);
+    } catch (e) {}
+
+    const userExists = registeredUsers.some(u => u.email === email) || mockUsers.some(u => u.email === email);
+    if (!userExists) {
+      throw new Error("No user registered with this email address.");
+    }
+    return true;
+  }
+
+  try {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+
+    if (error) {
+      console.error('Password reset email error:', error);
+      throw error;
+    }
+    return true;
+  } catch (error) {
+    console.error('sendPasswordResetEmailQuery exception:', error);
+    throw error;
+  }
+}
+
+/**
+ * Update current user's password
+ */
+export async function updatePasswordQuery(newPassword: string): Promise<boolean> {
+  if (isMockMode()) {
+    const data = localStorage.getItem('ipon_mock_current_user');
+    if (data) {
+      const currentUser = JSON.parse(data);
+      let registeredUsers: SignUpData[] = [];
+      try {
+        const regData = localStorage.getItem('ipon_mock_registered_users');
+        if (regData) registeredUsers = JSON.parse(regData);
+      } catch (e) {}
+
+      const userIndex = registeredUsers.findIndex(u => u.email === currentUser.email);
+      if (userIndex !== -1) {
+        registeredUsers[userIndex].password = newPassword;
+        localStorage.setItem('ipon_mock_registered_users', JSON.stringify(registeredUsers));
+      }
+    }
+    return true;
+  }
+
+  try {
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword
+    });
+
+    if (error) {
+      console.error('Update password error:', error);
+      throw error;
+    }
+    return true;
+  } catch (error) {
+    console.error('updatePasswordQuery exception:', error);
+    throw error;
+  }
+}
+

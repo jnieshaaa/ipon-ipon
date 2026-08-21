@@ -359,3 +359,4 @@ export async function updateLoanQuery(
     throw error;
   }
 }
+// Trigger IDE re-indexing
