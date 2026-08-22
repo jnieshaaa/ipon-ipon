@@ -552,3 +552,51 @@ CREATE POLICY "Group leaders can manage loan payments"
       AND savings_groups.creator_id = auth.uid()
     )
   );
+
+-- ============================================
+-- 11. Personal Loans Table (For tracking personal lent money)
+-- ============================================
+CREATE TABLE IF NOT EXISTS personal_loans (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  borrower_name VARCHAR(255) NOT NULL,
+  amount DECIMAL(10, 2) NOT NULL,
+  interest_rate DECIMAL(5, 2) DEFAULT 0.00,
+  borrow_date DATE NOT NULL,
+  notes TEXT,
+  status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'paid')),
+  type VARCHAR(20) DEFAULT 'lent' CHECK (type IN ('lent', 'borrowed')),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================
+-- 12. Personal Loan Payments Table
+-- ============================================
+CREATE TABLE IF NOT EXISTS personal_loan_payments (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  personal_loan_id UUID NOT NULL REFERENCES personal_loans(id) ON DELETE CASCADE,
+  amount DECIMAL(10, 2) NOT NULL,
+  payment_date DATE NOT NULL,
+  notes TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Enable RLS
+ALTER TABLE personal_loans ENABLE ROW LEVEL SECURITY;
+ALTER TABLE personal_loan_payments ENABLE ROW LEVEL SECURITY;
+
+-- Policies for Personal Loans
+CREATE POLICY "Users can manage their own personal loans"
+  ON personal_loans FOR ALL
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can manage payments for their own personal loans"
+  ON personal_loan_payments FOR ALL
+  USING (
+    EXISTS (
+      SELECT 1 FROM personal_loans
+      WHERE personal_loans.id = personal_loan_payments.personal_loan_id
+        AND personal_loans.user_id = auth.uid()
+    )
+  );

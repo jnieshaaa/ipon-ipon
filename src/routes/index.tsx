@@ -25,6 +25,7 @@ const HiramPayment = lazy(() => import("../views/pages/HiramPayment"));
 const PendingApprovals = lazy(() => import("../views/pages/PendingApprovals"));
 const QuickBalance = lazy(() => import("../views/pages/QuickBalance"));
 const ResetPassword = lazy(() => import("../views/pages/ResetPassword"));
+const PersonalLoansTracker = lazy(() => import("../views/pages/PersonalLoansTracker"));
 
 // Elegant loader using CSS custom variables matching user theme
 const PageLoading = () => (
@@ -137,6 +138,7 @@ export default function AppRoutes() {
           
           {/* Group Selection route */}
           <Route path="/group-selection" element={<GroupSelection />} />
+          <Route path="/personal-loans" element={<PersonalLoansTracker />} />
           
           {/* Dashboard route */}
           <Route path="/dashboard" element={<Dashboard />} />

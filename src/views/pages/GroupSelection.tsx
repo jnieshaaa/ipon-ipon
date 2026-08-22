@@ -270,6 +270,28 @@ export default function GroupSelection() {
             </div>
           )}
         </div>
+
+        {/* Personal Loans Entry Card */}
+        <div className="px-6 mt-8">
+          <h2 className="text-slate-800 text-sm font-bold uppercase tracking-wider mb-4 pl-1">Personal Ledger</h2>
+          <button
+            onClick={() => navigate('/personal-loans')}
+            className="w-full bg-gradient-to-r from-primary/10 via-tertiary/10 to-primary/5 rounded-2xl p-5 border border-primary/10 hover:border-primary/30 hover:shadow-md transition-all duration-300 active:scale-[0.99] text-left flex items-center justify-between group shadow-sm cursor-pointer"
+          >
+            <div className="flex items-center space-x-4 flex-1 min-w-0">
+              <div className="w-12 h-12 bg-gradient-to-tr from-primary to-tertiary rounded-xl flex items-center justify-center text-white shadow-md">
+                <Coins className="w-6 h-6" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-slate-800 text-sm font-bold mb-0.5">Aking Pahiram (Personal Loan Tracker)</h3>
+                <p className="text-slate-400 text-[10px] font-light leading-relaxed">
+                  Track individual loans lent to other people, record payments, and view repayment history.
+                </p>
+              </div>
+            </div>
+            <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+          </button>
+        </div>
       </div>
 
       {/* Footer Branding */}
@@ -513,6 +535,7 @@ export default function GroupSelection() {
           </div>
         </div>
       )}
+
     </div>
   );
 }
