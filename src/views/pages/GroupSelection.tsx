@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Coins, Users, X, ChevronRight, Shield, LogOut } from 'lucide-react';
+import { Coins, Users, X, ChevronRight, Shield, LogOut, Calculator } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { getGroupsForUserQuery, createGroupQuery, joinGroupQuery, ISavingsGroup } from '../../queries/groups';
 
@@ -137,7 +137,7 @@ export default function GroupSelection() {
     <div className="min-h-screen bg-slate-50/50 flex flex-col pb-8 justify-between">
       <div className="flex-1 flex flex-col animate-in fade-in duration-300">
         {/* Top Header Greeting Banner */}
-        <div className="bg-gradient-to-br from-slate-900 via-slate-950 to-primary/45 px-6 pt-10 pb-10 text-white relative overflow-hidden rounded-b-[2.5rem] border-b border-primary/20 shadow-lg text-center">
+        <div className="bg-gradient-to-br from-slate-900 via-slate-950 to-primary/45 px-6 pt-10 pb-10 text-white relative overflow-hidden rounded-b-3xl border-b border-primary/20 shadow-lg text-center">
           <div className="absolute right-0 bottom-0 translate-x-4 translate-y-4 w-32 h-32 bg-primary/10 rounded-full blur-2xl pointer-events-none" />
           
           {/* Logout Button */}
@@ -271,9 +271,11 @@ export default function GroupSelection() {
           )}
         </div>
 
-        {/* Personal Loans Entry Card */}
-        <div className="px-6 mt-8">
-          <h2 className="text-slate-800 text-sm font-bold uppercase tracking-wider mb-4 pl-1">Personal Ledger</h2>
+        {/* Personal Ledger Section */}
+        <div className="px-6 mt-8 space-y-4">
+          <h2 className="text-slate-800 text-sm font-bold uppercase tracking-wider pl-1">Personal Ledger & Budget</h2>
+          
+          {/* Aking Pahiram (Personal Loan Tracker) */}
           <button
             onClick={() => navigate('/personal-loans')}
             className="w-full bg-gradient-to-r from-primary/10 via-tertiary/10 to-primary/5 rounded-2xl p-5 border border-primary/10 hover:border-primary/30 hover:shadow-md transition-all duration-300 active:scale-[0.99] text-left flex items-center justify-between group shadow-sm cursor-pointer"
@@ -286,6 +288,25 @@ export default function GroupSelection() {
                 <h3 className="text-slate-800 text-sm font-bold mb-0.5">Aking Pahiram (Personal Loan Tracker)</h3>
                 <p className="text-slate-400 text-[10px] font-light leading-relaxed">
                   Track individual loans lent to other people, record payments, and view repayment history.
+                </p>
+              </div>
+            </div>
+            <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+          </button>
+
+          {/* Smart Budget Envelope */}
+          <button
+            onClick={() => navigate('/budget-planner')}
+            className="w-full bg-gradient-to-r from-primary/10 via-tertiary/10 to-primary/5 rounded-2xl p-5 border border-primary/10 hover:border-primary/30 hover:shadow-md transition-all duration-300 active:scale-[0.99] text-left flex items-center justify-between group shadow-sm cursor-pointer"
+          >
+            <div className="flex items-center space-x-4 flex-1 min-w-0">
+              <div className="w-12 h-12 bg-gradient-to-tr from-primary to-tertiary rounded-xl flex items-center justify-center text-white shadow-md">
+                <Calculator className="w-6 h-6" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-slate-800 text-sm font-bold mb-0.5">Smart Budget Envelope</h3>
+                <p className="text-slate-400 text-[10px] font-light leading-relaxed">
+                  Allocate your paycheck into custom percentages (Needs, Wants, Savings) and log expenses.
                 </p>
               </div>
             </div>

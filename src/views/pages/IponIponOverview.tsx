@@ -237,7 +237,7 @@ export default function IponIponOverview() {
   return (
     <div className="min-h-screen bg-slate-50/50 flex flex-col pb-6">
       {/* Top Banner Header */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-950 to-primary/45 px-6 pt-6 pb-20 text-white relative overflow-hidden rounded-b-[2rem] border-b border-primary/20 shadow-md">
+      <div className="bg-gradient-to-br from-slate-900 via-slate-950 to-primary/45 px-6 pt-6 pb-20 text-white relative overflow-hidden rounded-b-3xl border-b border-primary/20 shadow-md">
         <div className="absolute right-0 bottom-0 translate-x-4 translate-y-4 w-32 h-32 bg-primary/10 rounded-full blur-2xl pointer-events-none" />
         
         <div className="flex items-center justify-between">

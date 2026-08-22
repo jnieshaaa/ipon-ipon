@@ -132,7 +132,7 @@ export default function PersonalLoansTracker() {
   return (
     <div className="min-h-screen bg-slate-50/50 flex flex-col pb-8">
       {/* Top Header */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-950 to-primary/45 px-6 pt-12 pb-6 text-white relative overflow-hidden rounded-b-[2.5rem] border-b border-primary/20 shadow-lg flex items-center justify-between">
+      <div className="bg-gradient-to-br from-slate-900 via-slate-950 to-primary/45 px-6 pt-12 pb-6 text-white relative overflow-hidden rounded-b-3xl border-b border-primary/20 shadow-lg flex items-center justify-between">
         <button
           onClick={() => navigate('/group-selection')}
           className="w-10 h-10 bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl flex items-center justify-center active:scale-95 transition cursor-pointer"

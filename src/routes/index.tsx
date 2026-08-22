@@ -26,6 +26,8 @@ const PendingApprovals = lazy(() => import("../views/pages/PendingApprovals"));
 const QuickBalance = lazy(() => import("../views/pages/QuickBalance"));
 const ResetPassword = lazy(() => import("../views/pages/ResetPassword"));
 const PersonalLoansTracker = lazy(() => import("../views/pages/PersonalLoansTracker"));
+const BudgetPlanner = lazy(() => import("../views/pages/BudgetPlanner"));
+const BudgetHistory = lazy(() => import("../views/pages/BudgetHistory"));
 
 // Elegant loader using CSS custom variables matching user theme
 const PageLoading = () => (
@@ -139,6 +141,8 @@ export default function AppRoutes() {
           {/* Group Selection route */}
           <Route path="/group-selection" element={<GroupSelection />} />
           <Route path="/personal-loans" element={<PersonalLoansTracker />} />
+          <Route path="/budget-planner" element={<BudgetPlanner />} />
+          <Route path="/budget-history" element={<BudgetHistory />} />
           
           {/* Dashboard route */}
           <Route path="/dashboard" element={<Dashboard />} />

@@ -600,3 +600,92 @@ CREATE POLICY "Users can manage payments for their own personal loans"
         AND personal_loans.user_id = auth.uid()
     )
   );
+
+-- ============================================
+-- 13. Budget Plans Table
+-- ============================================
+CREATE TABLE IF NOT EXISTS budget_plans (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  income_amount DECIMAL(10, 2) NOT NULL,
+  pay_period VARCHAR(50) DEFAULT 'monthly', -- 'monthly', 'weekly', etc.
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================
+-- 14. Budget Categories (Envelopes) Table
+-- ============================================
+CREATE TABLE IF NOT EXISTS budget_categories (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  plan_id UUID NOT NULL REFERENCES budget_plans(id) ON DELETE CASCADE,
+  name VARCHAR(100) NOT NULL,
+  percentage DECIMAL(5, 2) NOT NULL,
+  allocated_amount DECIMAL(10, 2) NOT NULL,
+  spent_amount DECIMAL(10, 2) DEFAULT 0.00,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================
+-- 15. Budget Transactions (Expenses) Table
+-- ============================================
+CREATE TABLE IF NOT EXISTS budget_transactions (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  category_id UUID NOT NULL REFERENCES budget_categories(id) ON DELETE CASCADE,
+  amount DECIMAL(10, 2) NOT NULL,
+  description VARCHAR(255) NOT NULL,
+  transaction_date DATE NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Enable RLS
+ALTER TABLE budget_plans ENABLE ROW LEVEL SECURITY;
+ALTER TABLE budget_categories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE budget_transactions ENABLE ROW LEVEL SECURITY;
+
+-- Policies for Budget Tables
+CREATE POLICY "Users can manage their own budget plans"
+  ON budget_plans FOR ALL
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can manage their own budget categories"
+  ON budget_categories FOR ALL
+  USING (
+    EXISTS (
+      SELECT 1 FROM budget_plans
+      WHERE budget_plans.id = budget_categories.plan_id
+        AND budget_plans.user_id = auth.uid()
+    )
+  );
+
+CREATE POLICY "Users can manage their own budget transactions"
+  ON budget_transactions FOR ALL
+  USING (
+    EXISTS (
+      SELECT 1 FROM budget_categories
+      JOIN budget_plans ON budget_plans.id = budget_categories.plan_id
+      WHERE budget_categories.id = budget_transactions.category_id
+        AND budget_plans.user_id = auth.uid()
+    )
+  );
+
+-- ============================================
+-- 16. Budget Income History Table (Paycheck tracker logs)
+-- ============================================
+CREATE TABLE IF NOT EXISTS budget_income_history (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  amount DECIMAL(10, 2) NOT NULL,
+  pay_period VARCHAR(50) DEFAULT 'monthly',
+  received_date DATE NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Enable RLS
+ALTER TABLE budget_income_history ENABLE ROW LEVEL SECURITY;
+
+-- Policy
+CREATE POLICY "Users can manage their own budget income history"
+  ON budget_income_history FOR ALL
+  USING (auth.uid() = user_id);
